@@ -1,0 +1,16 @@
+{
+  "name": "claude-mods",
+  "owner": {
+    "name": "Sanmu"
+  },
+  "metadata": {
+    "description": "Sanmu's Claude Code mods."
+  },
+  "plugins": [
+    {
+      "name": "to-do",
+      "source": "./to-do",
+      "description": "A side pane listing the session's tasks: what is in progress, what is pending and what is done."
+    }
+  ]
+}

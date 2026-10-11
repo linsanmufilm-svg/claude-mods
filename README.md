@@ -1,0 +1,84 @@
+# claude-mods
+
+Sanmu 自製的 Claude Code mod 集合。這個 repo 本身就是一個 plugin marketplace，裡面每個資料夾是一個 mod。
+
+## Mods
+
+### to-do
+
+在視窗側邊開一個「To-do」窗格，即時顯示這個 session 的任務清單：
+
+- **進行中** ▸：Claude 正在做的任務（有才顯示）
+- **待辦** ○：還沒開始的任務
+- **已完成** ✓：做完的任務
+- 最上方一行進度，例如「完成 3/7」
+
+任務來自 Claude 本來就在用的任務工具（`TaskCreate`、`TaskUpdate`、`TaskList`、`TodoWrite`），不需要額外設定。session 開始時會從對話紀錄重建清單，所以恢復舊 session 也看得到之前的任務；`/clear` 會清空清單。窗格關掉後輸入 `/to-do` 可以再打開。
+
+在終端機的全螢幕模式且寬度至少 110 欄時，窗格會停靠在側邊；其他情況顯示在輸入框上方。
+
+## 安裝
+
+在 Claude Code 的終端機 session 裡輸入：
+
+```
+/plugin install to-do --marketplace linsanmufilm-svg/claude-mods
+```
+
+接著依序：按 `y` 加入 marketplace，再按 Enter 選 user scope（所有 session 都會載入）。
+
+也可以用命令列安裝：
+
+```bash
+claude plugin marketplace add linsanmufilm-svg/claude-mods
+```
+
+```bash
+claude plugin install to-do@claude-mods
+```
+
+裝好後開一個新的 session 就會生效。
+
+### 更新
+
+```bash
+claude plugin marketplace update claude-mods
+```
+
+```bash
+claude plugin update to-do@claude-mods
+```
+
+### 移除
+
+```bash
+claude plugin uninstall to-do@claude-mods
+```
+
+## 開發
+
+每個 mod 是一個 function-hooks plugin：
+
+```
+to-do/
+├── .claude-plugin/plugin.json   # manifest
+├── hooks/hooks.json             # 指向 hooks 模組
+├── hooks/register.tsx           # hooks 與窗格畫面
+├── hooks/tasks.ts               # 工具呼叫 → 任務清單
+├── types/index.d.ts             # $.state 的型別契約
+└── tests/to-do.test.ts
+```
+
+檢查與測試：
+
+```bash
+claude plugin validate to-do
+```
+
+```bash
+claude plugin test to-do
+```
+
+新增 mod 時，在 `.claude-plugin/marketplace.json` 的 `plugins` 加一筆 `{ "name": "<mod>", "source": "./<mod>" }`。
+
+> 這些 mod 使用 Claude Code 的 function hooks API，目前仍是 early access，Claude Code 版本更新時 API 可能變動。
