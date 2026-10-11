@@ -1,9 +1,19 @@
 {
   "name": "to-do",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A side pane listing the session's tasks: what is in progress, what is pending and what is done.",
   "types": "./types/index.d.ts",
   "author": {
     "name": "Sanmu"
+  },
+  "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Pane language",
+      "description": "The language of the pane's labels: zh (中文) or en (English).",
+      "options": ["zh", "en"],
+      "default": "zh",
+      "required": false
+    }
   }
 }

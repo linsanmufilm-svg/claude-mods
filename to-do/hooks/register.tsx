@@ -2,16 +2,17 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, ToolCallResult } from 'claude-code'
 
 import type { TodoItem, TodoStatus } from '../types'
+import { labelsFor } from './labels'
 import { TASK_TOOLS, applyCall } from './tasks'
 
 const PANE = 'to-do'
 const TITLE = 'To-do'
 const items = atom({ plugin: 'to-do', key: 'items' } as const, [])
 
-const SECTIONS: { status: TodoStatus; label: string; mark: string; color?: string }[] = [
-  { status: 'in_progress', label: '進行中', mark: '▸', color: 'warning' },
-  { status: 'pending', label: '待辦', mark: '○' },
-  { status: 'completed', label: '已完成', mark: '✓', color: 'success' },
+const SECTIONS: { status: TodoStatus; mark: string; color?: string }[] = [
+  { status: 'in_progress', mark: '▸', color: 'warning' },
+  { status: 'pending', mark: '○' },
+  { status: 'completed', mark: '✓', color: 'success' },
 ]
 
 // Opens the pane; where no surface can show one, there is nothing to do.
@@ -38,7 +39,9 @@ async function record(
   }
 }
 
-export const register: Register = on => {
+export const register: Register = (on, options) => {
+  const labels = labelsFor(options.language)
+
   on('session.start', async ($, e, next) => {
     await $.command.register({
       name: 'to-do',
@@ -110,8 +113,8 @@ export const register: Register = on => {
     if (list.length === 0) {
       return (
         <Box flexDirection="column">
-          <Text dimColor>還沒有任務。</Text>
-          <Text dimColor>Claude 排出任務後會列在這裡。</Text>
+          <Text dimColor>{labels.empty[0]}</Text>
+          <Text dimColor>{labels.empty[1]}</Text>
         </Box>
       )
     }
@@ -120,9 +123,7 @@ export const register: Register = on => {
 
     return (
       <Box flexDirection="column">
-        <Text bold>
-          完成 {done}/{list.length}
-        </Text>
+        <Text bold>{labels.progress(done, list.length)}</Text>
         {SECTIONS.map(section => {
           const rows = list.filter(item => item.status === section.status)
           if (rows.length === 0 && section.status === 'in_progress') return null
@@ -131,9 +132,9 @@ export const register: Register = on => {
           return (
             <Box key={section.status} flexDirection="column" marginTop={1}>
               <Text bold color={section.color}>
-                {section.label} ({rows.length})
+                {labels.sections[section.status]} ({rows.length})
               </Text>
-              {rows.length === 0 && <Text dimColor>（無）</Text>}
+              {rows.length === 0 && <Text dimColor>{labels.none}</Text>}
               {rows.map(item => (
                 <Text key={item.id} dimColor={isDone} color={isDone ? undefined : section.color}>
                   {section.mark} {item.subject}

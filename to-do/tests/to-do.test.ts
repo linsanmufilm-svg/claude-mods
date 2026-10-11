@@ -76,3 +76,29 @@ test('the pane says so when there are no tasks', async $ => {
   expect(await ui.find({ type: 'Text', text: /還沒有任務/ })).toBeDefined()
   await ui.unmount()
 })
+
+test('the language option switches the pane to English', { options: { language: 'en' } }, async ($, on) => {
+  on('tool.call', { tool: 'TaskCreate' }, async () => ({ result: { task: { id: '1', subject: '' } } }))
+  on('tool.call', { tool: 'TaskUpdate' }, async ($, e) => ({
+    result: { success: true, taskId: e.taskId, updatedFields: ['status'] },
+  }))
+
+  await $.tool.call({ tool: 'TaskCreate', subject: 'Draft the outline', description: '' })
+  await $.tool.call({ tool: 'TaskUpdate', taskId: '1', status: 'in_progress' })
+
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ plugin: 'to-do', surface, ...PANE })
+    expect(await ui.find({ type: 'Text', text: /0\/1 done/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /In progress \(1\)/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /Pending \(0\)/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /\(none\)/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /進行中|待辦/ })).toBeUndefined()
+    await ui.unmount()
+  }
+})
+
+test('the empty pane follows the language option', { options: { language: 'en' } }, async $ => {
+  const ui = await $.ui.mount({ plugin: 'to-do', surface: 'terminal', ...PANE })
+  expect(await ui.find({ type: 'Text', text: /No tasks yet/ })).toBeDefined()
+  await ui.unmount()
+})
