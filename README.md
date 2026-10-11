@@ -1,6 +1,65 @@
 # claude-mods
 
-Sanmu 自製的 Claude Code mod 集合。這個 repo 本身就是一個 plugin marketplace，裡面每個資料夾是一個 mod。
+Sanmu 自製的 Claude Code mod 集合。這個 repo 本身就是一個 plugin marketplace，裡面每個資料夾是一個 mod。（English below. 中文說明在英文段落之後。）
+
+## English
+
+A collection of Claude Code mods by Sanmu. The repo is itself a plugin marketplace; each folder is one mod.
+
+### to-do
+
+Opens a "To-do" pane at the side of the window that shows the session's task list as it changes:
+
+- **進行中 (in progress)** ▸: what Claude is working on now (shown only when there is something)
+- **待辦 (pending)** ○: tasks not started yet
+- **已完成 (completed)** ✓: tasks that are done
+- A progress line at the top, such as "完成 3/7" (3 of 7 done)
+
+The pane's labels are in Chinese. Tasks come from the task tools Claude already uses (`TaskCreate`, `TaskUpdate`, `TaskList`, `TodoWrite`), so there is nothing to set up. When a session starts, the list is rebuilt from the conversation, so a resumed session shows its earlier tasks; `/clear` empties it. If you close the pane, type `/to-do` to open it again.
+
+In a terminal, the pane docks at the side in fullscreen mode at 110 columns or wider; otherwise it shows above the prompt.
+
+### Install
+
+In a Claude Code terminal session, type:
+
+```
+/plugin install to-do --marketplace linsanmufilm-svg/claude-mods
+```
+
+Press `y` to add the marketplace, then Enter to pick the user scope (loads in every session).
+
+Or from the command line:
+
+```bash
+claude plugin marketplace add linsanmufilm-svg/claude-mods
+```
+
+```bash
+claude plugin install to-do@claude-mods
+```
+
+Start a new session and the pane appears.
+
+### Update
+
+```bash
+claude plugin marketplace update claude-mods
+```
+
+```bash
+claude plugin update to-do@claude-mods
+```
+
+### Uninstall
+
+```bash
+claude plugin uninstall to-do@claude-mods
+```
+
+> These mods use Claude Code's function hooks API, which is still early access and may change between Claude Code releases.
+
+---
 
 ## Mods
 
