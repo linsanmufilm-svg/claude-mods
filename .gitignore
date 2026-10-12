@@ -3,3 +3,6 @@
 */.claude-plugin/types/
 */tsconfig.json
 .DS_Store
+
+# A local export of the claude-community marketplace; third-party text, kept off GitHub.
+claude-community-plugins.csv
