@@ -66,7 +66,15 @@ test('the pane lists pending and completed tasks on every surface', async ($, on
     const ui = await $.ui.mount({ plugin: 'to-do', surface, ...PANE })
     expect(await ui.find({ type: 'Text', text: /完成 1\/2/ })).toBeDefined()
     expect(await ui.find({ type: 'Text', text: /○ Send the cut/ })).toBeDefined()
+    // Finished tasks wait in a folded list.
+    expect((await ui.find({ key: 'done-toggle' }))?.text).toMatch(/▸ ✓ 已完成 \(1\)/)
+    expect(await ui.find({ type: 'Text', text: /✓ Draft the outline/ })).toBeUndefined()
+
+    await ui.press({ key: 'done-toggle' })
+    expect((await ui.find({ key: 'done-toggle' }))?.text).toMatch(/▾ ✓ 已完成 \(1\)/)
     expect(await ui.find({ type: 'Text', text: /✓ Draft the outline/ })).toBeDefined()
+
+    await ui.press({ key: 'done-toggle' })
     await ui.unmount()
   }
 })

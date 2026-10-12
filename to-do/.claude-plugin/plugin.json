@@ -1,6 +1,6 @@
 {
   "name": "to-do",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "A side pane listing the session's tasks: what is in progress, what is pending and what is done.",
   "types": "./types/index.d.ts",
   "author": {
@@ -11,8 +11,18 @@
       "type": "string",
       "title": "Pane language",
       "description": "The language of the pane's labels: zh (中文) or en (English).",
-      "options": ["zh", "en"],
+      "options": [
+        "zh",
+        "en"
+      ],
       "default": "zh",
+      "required": false
+    },
+    "autoLog": {
+      "type": "boolean",
+      "title": "Log finished work",
+      "description": "Claude adds each request it finishes to the completed list on its own.",
+      "default": true,
       "required": false
     }
   }
